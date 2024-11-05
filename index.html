@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WhatsApp Share dengan Progress</title>
+    <style>
+        .progress-container {
+            width: 100%;
+            max-width: 300px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: #25d366;
+            border-radius: 10px;
+            transition: width 0.10s ease-in-out;
+        }
+
+        .share-count {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #128C7E;
+        }
+
+        /* Modal/Popup Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to { 
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease-out;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: #25d366;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .confetti {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: #128C7E;
+        }
+        a{
+          text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bagikan ke WhatsApp</h1>
+    <p>Bagikan ke 5 teman kamu untuk menyelesaikan tantangan!</p>
+    
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+    
+    <div class="share-count">
+        Dibagikan: <span id="shareCount">0</span>/5
+    </div>
+
+    <button onclick="shareToWhatsApp()">Bagikan ke WhatsApp</button>
+
+    <!-- Modal/Popup -->
+    <div id="congratsModal" class="modal">
+        <div class="modal-content">
+            <div class="confetti">🎉 🎊 🎈</div>
+            <div class="modal-title">Selamat!</div>
+            <div class="modal-message">
+                Kamu telah berhasil membagikan ke 5 teman! Terima kasih atas partisipasimu!
+            </div>
+            <button class="close-btn"><a href="Login.html">Lanjut</a></button>
+        </div>
+    </div>
+
+    <script>
+        let shareCount = 0;
+        const targetShares = 5;
+        const modal = document.getElementById('congratsModal');
+
+        function showModal() {
+            modal.style.display = 'block';
+            // Optional: Reset counter when showing modal
+            // shareCount = 0;
+            // updateProgressBar();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            // Reset counter when closing modal
+            shareCount = 0;
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            const percentage = (shareCount / targetShares) * 100;
+            progressBar.style.width = percentage + '%';
+            document.getElementById('shareCount').textContent = shareCount;
+
+            if (shareCount >= targetShares) {
+                showModal();
+            }
+        }
+
+        function shareToWhatsApp() {
+            // Ganti konten yang akan dibagikan di sini
+            const message = "";
+            
+            // Bangun URL untuk berbagi di WhatsApp
+            const whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+            
+            // Buka URL dalam jendela baru
+            window.open(whatsappUrl, "_blank");
+
+            // Increment share count dan update progress bar
+            shareCount++;
+            updateProgressBar();
+        }
+
+        // Optional: Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
